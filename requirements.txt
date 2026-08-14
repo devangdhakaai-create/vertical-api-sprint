@@ -39,3 +39,4 @@ groq
 # branch -D main = purani main (jisme leaked key hai) delete karo
 # branch -m main = naye branch ka naam main rakho
 # push -f origin main = force push karo — ye GitHub pe purani history replace kar dega
+# http://localhost:8000/docs

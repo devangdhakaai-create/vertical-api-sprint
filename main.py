@@ -105,8 +105,9 @@ async def validation_exception_handler(request, exc):
 
 class QueryRequest(BaseModel):
     query: str
+    use_multi_query: bool = False
 
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
-    answer = await generate_answer(request.query)
+    answer = await generate_answer(request.query, use_multi_query=request.use_multi_query)
     return {"query": request.query, "answer": answer}
