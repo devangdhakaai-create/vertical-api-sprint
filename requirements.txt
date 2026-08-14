@@ -1,0 +1,41 @@
+fastapi==0.141.1
+uvicorn
+pydantic==2.13.4
+sqlalchemy
+asyncpg==0.31.0
+structlog
+locust==2.46.3
+python-dotenv
+pgvector==0.2.0
+pymupdf
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+sentence-transformers
+groq
+
+# docker build -t todo-api .
+# docker stop todo-container
+# docker rm todo-container
+# docker stop todo-container
+# docker rm todo-container
+# docker run -d -p 8000:8000 --add-host=host.docker.internal:host-gateway -e DATABASE_URL="postgresql+asyncpg://postgres:786786@host.docker.internal:5432/todo_db" --name todo-container todo-api
+# venv\Scripts\activate
+# http://localhost:8000/docs
+# docker run -p 8000:8000 todo-api
+# http://localhost:8000/docs
+# docker-compose up --build   ,to build the freash image or to commit/add the changes
+# docker-compose exec db psql -U postgres -d todo_db
+# git rm --cached .env, Remove .env from git tracking
+# git checkout --orphan temp_branch
+# git add -A
+# git commit -m "Clean history without secrets"
+# git branch -D main
+# git branch -m main
+# git push -f origin main
+# Line-by-line:
+
+# checkout --orphan temp_branch = ek naya branch banao jisme koi history na ho
+# add -A aur commit = saara current code (with naye key, .env ab .gitignore mein hai to include nahi hoga) ek fresh commit mein daalो
+# branch -D main = purani main (jisme leaked key hai) delete karo
+# branch -m main = naye branch ka naam main rakho
+# push -f origin main = force push karo — ye GitHub pe purani history replace kar dega

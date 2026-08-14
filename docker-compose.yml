@@ -1,0 +1,33 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16  # pgvector/pgvector:pg16 = ek official image jisme pgvector extension pre-installed hai
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: 8000
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+
+
+# Line-by-line:
+# db service = ek Postgres container, official image use karke
+# ports: "5433:5432" = laptop ka port 5433 → container ka 5432 (5433 isliye taaki tumhare existing local Postgres, jo already 5432 use kar raha hai, usse clash na ho)
+# volumes: pgdata:... = data persist karega even if container restart ho (warna har restart pe data gayab ho jayega)
+# api service = tumhara FastAPI app, isi Dockerfile se build hoga
+# depends_on: db = Compose pehle db start karega, phir api
+# Dono services same network pe honge automatically — isliye api container db hostname se Postgres tak pahunch sakta hai
