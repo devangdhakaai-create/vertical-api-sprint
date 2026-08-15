@@ -106,6 +106,7 @@ async def validation_exception_handler(request, exc):
 class QueryRequest(BaseModel):
     query: str
     use_multi_query: bool = False
+    use_rerank: bool = False
 
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
