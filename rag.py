@@ -39,14 +39,15 @@ async def multi_query_retrieve(query: str, top_k: int = 3) -> list:
 # seen_ids set = duplicate chunks avoid karta hai (agar do queries same chunk retrieve karein)
 # Har variation se top_k chunks aate hain, sab merge hote hain unique list mein
 
-async def generate_answer(query: str, top_k: int = 3, use_multi_query: bool = False):
-    if use_multi_query:
+async def generate_answer(query: str, top_k: int = 3, use_multi_query: bool = False, use_hyde: bool = False):
+    if use_hyde:
+        chunks = await hyde_retrieve(query, top_k=top_k)
+    elif use_multi_query:
         chunks = await multi_query_retrieve(query, top_k=top_k)
     else:
         chunks = await retrieve_similar_chunks(query, top_k=top_k)
     
     context = "\n\n".join([chunk.content for chunk in chunks])
-    
     prompt = f"""Answer the question based only on the context below. If the answer isn't in the context, say so.
 
 Context:
@@ -61,8 +62,19 @@ Answer:"""
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2
     )
-    
     return response.choices[0].message.content
 
 # use_multi_query: bool = False = default single-query rahega (fast), lekin flag se multi-query switch kar sakte ho — ye interview mein achha point hai ("configurable retrieval strategy")
 
+async def hyde_retrieve(query: str, top_k: int = 3) -> list:
+    prompt = f"Write a short hypothetical paragraph answering this question: {query}"
+    
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+    
+    hypothetical_answer = response.choices[0].message.content
+    chunks = await retrieve_similar_chunks(hypothetical_answer, top_k=top_k)
+    return chunks

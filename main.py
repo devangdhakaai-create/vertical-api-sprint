@@ -107,8 +107,9 @@ class QueryRequest(BaseModel):
     query: str
     use_multi_query: bool = False
     use_rerank: bool = False
+    use_hyde: bool = False
 
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
-    answer = await generate_answer(request.query, use_multi_query=request.use_multi_query)
+    answer = await generate_answer(request.query, use_multi_query=request.use_multi_query, use_hyde=request.use_hyde)
     return {"query": request.query, "answer": answer}
